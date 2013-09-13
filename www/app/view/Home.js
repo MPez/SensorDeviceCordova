@@ -1,0 +1,284 @@
+Ext.define('SensorDevice.view.Home', {
+    extend: 'Ext.Container',
+    requires: [
+        'SensorDevice.view.CameraDemo',
+        'SensorDevice.view.FileDemo',
+        'SensorDevice.view.MediaDemo',
+        
+        'Ext.dataview.List',
+        'Ext.TitleBar',
+        'Ext.Map',
+        'Ext.carousel.Carousel'
+    ],
+    alias: 'widget.home',
+    
+    config: {
+        //styleHtmlContent: true,
+        height: '100%',
+        layout: {
+            type: 'card',
+            animation: 'fade'
+        },
+        setScrollable: true,
+        
+        items: [
+            {
+                /*
+                 * item 0
+                 */
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        docked: 'top',
+                        title: 'Sensor Device List'
+                    },
+                    {
+                        xtype: 'list',
+                        itemId: 'sensorList',
+                        store: 'Sensors',
+                        itemTpl: '{name}: {description}',
+                        height: '100%',
+                        onItemDisclosure: true
+                    }
+                ]
+            },
+            {
+                /*
+                 * item 1
+                 * sensorList index 0
+                 */
+                items: 
+                { xtype: 'filedemo' }
+            },
+            {
+                /*
+                 * item 2
+                 * sensorList index 1
+                 */
+                items: 
+                { xtype: 'camerademo' }
+            },
+            {
+                /*
+                 * item 3
+                 * sensorList index 2
+                 */
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        docked: 'top',
+                        title: 'Contacts Demo',
+                        items: [
+                            {
+                                xtype: 'button',
+                                itemId: 'backButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left',
+                                iconMask: true
+                            },
+                            {
+                                xtype: 'button',
+                                text: 'Load contacts',
+                                itemId: 'loadContactsButton',
+                                align: 'right'
+                            },
+                            {
+                                xtype: 'button',
+                                text: 'Delete all contacts',
+                                itemId: 'deleteContactsButton',
+                                align: 'right'
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'list',
+                        itemTpl: '{First} {Last}',
+                        itemId: 'contactsList',
+                        height: '100%',
+                        store: 'Contacts',
+                        loadingText: 'Loading contacts...',
+                        emptyText: 'No contacts found.',
+                        grouped: true,
+                        indexBar: true
+                    }
+                ]
+            },
+            {
+                /*
+                 * item 4
+                 * sensorList index 3
+                 */
+                items:
+                { xtype: 'mediademo' }
+            },
+            {
+                /*
+                 * item 5
+                 * sensorList index 4
+                 */
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        title: 'Geolocation',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
+                        items: [
+                            {
+                                itemId: 'backButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left',
+                            },
+                            {
+                                itemId: 'locationButton',
+                                iconCls: 'locate',
+                                align: 'right'
+                            },
+                            {
+                                itemId: 'positionButton',
+                                iconCls: 'search',
+                                align: 'right'
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'map',
+                        itemId: 'map',
+                        height: '100%',
+                        useCurrentLocation: false,
+                        
+                        mapOptions: {
+                            center: new google.maps.LatLng(41.9, 12.483333),
+                            zoom: 9
+                        }            
+                    }
+                ]
+            },
+            {
+                /*
+                 * item 6
+                 */
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        docked: 'top',
+                        title: 'Positions',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
+                        
+                        items: [
+                            {
+                                itemId: 'backGeolocationButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left'
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'list',
+                        itemTpl: 'Latitude: {latitude}, Longitude: {longitude}, Timestamp: {timestamp}',
+                        itemId: 'positionsList',
+                        height: '100%',
+                        store: 'Positions',
+                        loadingText: 'Loading positions...',
+                        emptyText: 'No positions found.'
+                    }
+                ]
+            }
+        ],
+        
+        listeners: [
+            {
+                delegate: '#sensorList',
+                event: 'disclose',
+                fn: 'onItemDisclose'
+            },
+            {
+                delegate: '#backButton',
+                event: 'tap',
+                fn: 'onBackButtonTap'
+            },
+            {
+                delegate: '#loadContactsButton',
+                event: 'tap',
+                fn: 'onLoadContactsButton'
+            },
+            {
+                delegate: '#deleteContactsButton',
+                event: 'tap',
+                fn: 'onDeleteContactsButton'
+            },
+            {
+                delegate: '#locationButton',
+                event: 'tap',
+                fn: 'onLocationButton'
+            },
+            {
+                delegate: '#map',
+                event: 'maprender',
+                fn: 'onMapRender'
+            },
+            {
+                delegate: '#positionButton',
+                event: 'tap',
+                fn: 'onPositionButton'
+            },
+            {
+                delegate: '#backGeolocationButton',
+                event: 'tap',
+                fn: 'onBackGeolocationButton'
+            }
+        ]
+    },
+    
+    onItemDisclose: function(scope, record, target, index, e, eOpts) {
+        console.log('onItemDisclose');
+        
+        this.fireEvent('itemDiscloseCommand', this, index);
+    },
+    
+    onBackButtonTap: function(scope, e, eOpts) {
+        console.log('onBackButtonTap');
+        
+        this.fireEvent('backButtonCommand', this);
+    },
+    
+    onLoadContactsButton: function(scope, e, eOpts) {
+        console.log('onLoadContactsButton');
+        
+        this.fireEvent('loadContactsCommand', this);
+    },
+    
+    onDeleteContactsButton: function() {
+        console.log('onDeleteContactsButton');
+        
+        this.fireEvent('deleteContactsCommand', this);        
+    },
+    
+    onLocationButton: function() {
+        console.log('onLocationButton');
+        
+        this.fireEvent('locationCommand', this);
+    },
+    
+    onMapRender: function(scope, map, eOpts) {
+        console.log('onMapRender');
+        
+        this.fireEvent('mapRenderCommand', this, map);
+    },
+    
+    onPositionButton: function(scope, e, eOpts) {
+        console.log('onPositionButton');
+        
+        this.fireEvent('positionCommand', this);
+    },
+    
+    onBackGeolocationButton: function(scope, e, eOpts) {
+        console.log('onBackGeolocationButton');
+        
+        this.fireEvent('backGeolocationCommand', this);
+    }
+});
