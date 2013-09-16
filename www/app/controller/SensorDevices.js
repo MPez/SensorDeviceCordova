@@ -23,7 +23,8 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 locationCommand: 'onLocationCommand',
                 mapRenderCommand: 'onMapRenderCommand',
                 positionCommand: 'onPositionCommand',
-                backGeolocationCommand: 'onBackGeolocationCommand'
+                backGeolocationCommand: 'onBackGeolocationCommand',
+                scanBarcodeCommand: 'onScanBarcodeCommand'
             },
             cameraDemoView: {
                 cameraButtonCommand: 'onCameraButtonCommand',
@@ -241,7 +242,6 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         var personalInfoStore = Ext.getStore('PersonalInfos');
         var record = personalInfoStore.getAt(0).getData();
         var string = Ext.JSON.encode(record);
-        console.log(string);
         
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
         
@@ -496,13 +496,37 @@ Ext.define('SensorDevice.controller.SensorDevices', {
     onPositionCommand: function(home) {
         console.log('onPositionCommand');
         
-        home.setActiveItem(6);
+        home.setActiveItem(7);
     },
     
     onBackGeolocationCommand: function(home) {
         console.log('onBackGeolocationCommand');
         
         home.setActiveItem(5);
+    },
+    
+    /*
+     * Cordova plugin BarcodeScanner
+     */
+    onScanBarcodeCommand: function() {
+        console.log('onScanBarcodeCommand');
+        cordova.plugins.barcodeScanner.scan(success, fail);
+        
+        function success(result) {
+            console.log('success');
+            var barcode = Ext.create('SensorDevice.model.Barcode', {
+                code: result.text,
+                format: result.format
+            });
+            var barcodeStore = Ext.getStore('Barcodes');
+            barcodeStore.add(barcode);
+            barcodeStore.sync();
+        }
+        
+        function fail(error) {
+            console.log('fail');
+            Ext.Msg.alert('Error', error);
+        }
     },
     
     //called when the Application is initialized
@@ -518,5 +542,6 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         Ext.getStore('AudioVideos').load();
         Ext.getStore('PersonalInfos').load();
         Ext.getStore('Positions').load();
+        Ext.getStore('Barcodes').load();
     }
 });

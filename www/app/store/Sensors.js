@@ -8,7 +8,8 @@ Ext.define('SensorDevice.store.Sensors', {
             { name: 'Camera', description: 'Permette di catturare un\'immagine tramite la fotocamera o la galleria del dispositivo'},
             { name: 'Contacts' , description: 'Permette di consultare e modificare la rubrica del dispositivo'},
             { name: 'Media', description: 'Permette di catturare o riprodurre file audio tramite il dispositivo' },
-            { name: 'Geolocation', description: 'Permette di visualizzare la posizione corrente del dispositivo'}
+            { name: 'Geolocation', description: 'Permette di visualizzare la posizione corrente del dispositivo'},
+            { name: 'Barcode', description: 'Permette di leggere un barcode tramite la fotocamera del dispositivo'}
         ]
     }
 });

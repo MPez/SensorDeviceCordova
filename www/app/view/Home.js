@@ -7,8 +7,7 @@ Ext.define('SensorDevice.view.Home', {
         
         'Ext.dataview.List',
         'Ext.TitleBar',
-        'Ext.Map',
-        'Ext.carousel.Carousel'
+        'Ext.Map'
     ],
     alias: 'widget.home',
     
@@ -158,6 +157,44 @@ Ext.define('SensorDevice.view.Home', {
             {
                 /*
                  * item 6
+                 * sensorList index 5
+                 */
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        title: 'Barcode scanner',
+                        docked: 'top',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
+                        items: [
+                            {
+                                itemId: 'backButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left',
+                            },
+                            {
+                                itemId: 'scanBarcodeButton',
+                                text: 'Scan',
+                                align: 'right'
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'list',
+                        itemId: 'barcodeList',
+                        itemTpl: 'Code: {code}, Format: {format}',
+                        store: 'Barcodes',
+                        loadingText: 'Loading barcodes...',
+                        emptyText: 'No barcodes found.',
+                        height: '100%'
+                    }
+                ]
+            },
+            {
+                /*
+                 * item 7
                  */
                 items: [
                     {
@@ -230,6 +267,11 @@ Ext.define('SensorDevice.view.Home', {
                 delegate: '#backGeolocationButton',
                 event: 'tap',
                 fn: 'onBackGeolocationButton'
+            },
+            {
+                delegate: '#scanBarcodeButton',
+                event: 'tap',
+                fn: 'onScanBarcodeButton'
             }
         ]
     },
@@ -280,5 +322,10 @@ Ext.define('SensorDevice.view.Home', {
         console.log('onBackGeolocationButton');
         
         this.fireEvent('backGeolocationCommand', this);
+    },
+    
+    onScanBarcodeButton: function(scope, e, eOpts) {
+        console.log('onScanBarcodeButton');
+        this.fireEvent('scanBarcodeCommand', this);
     }
 });

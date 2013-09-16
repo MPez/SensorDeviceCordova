@@ -35,6 +35,7 @@ Ext.application({
         'Contact',
         'PersonalInfo',
         'Position',
+        'Barcode',
         'NoteSync',
         'AuthorSync',
         'Device'
@@ -47,6 +48,7 @@ Ext.application({
         'Contacts',
         'PersonalInfos',
         'Positions',
+        'Barcodes',
         'DevicesSync'
     ],
     
