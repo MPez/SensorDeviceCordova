@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SensorDevice-store-Contacts'>/**
+</span> * Contacts rappresenta lo store locale utilizzato per salvare i contatti
+ * recuperati dalla rubrica del dispositivo mobile
+ */
+Ext.define('SensorDevice.store.Contacts', {
+    extend: 'Ext.data.Store',
+    requires: [
+        'Ext.data.proxy.LocalStorage'
+    ],
+    
+    config: {
+<span id='SensorDevice-store-Contacts-cfg-model'>        model: 'SensorDevice.model.Contact',
+</span><span id='SensorDevice-store-Contacts-cfg-storeId'>        storeId: 'Contacts',
+</span>        
+<span id='SensorDevice-store-Contacts-cfg-proxy'>        proxy: {
+</span>            type: 'localstorage',
+            id: 'SensorDevice-contacts-store'
+        },
+        
+<span id='SensorDevice-store-Contacts-cfg-sorters'>        sorters: [
+</span>            {property: 'name', direction: 'ASC'}
+        ],
+        
+<span id='SensorDevice-store-Contacts-cfg-grouper'>        grouper: {
+</span>            sortProperty: 'name',
+            direction: 'ASC',
+            groupFn: function(record) {
+                if (record &amp;&amp; record.data.name) {
+                    return record.data.name.substr(0,1).toUpperCase();
+                } else {
+                    return '';
+                }
+            }
+        }
+    }
+});</pre>
+</body>
+</html>

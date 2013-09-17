@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SensorDevice-store-Sensors'>/**
+</span> * Sensors rappresenta lo store inline utilizzato per visualizzare la lista
+ * delle funzionalità disponibili tramite l'app
+ */
+Ext.define('SensorDevice.store.Sensors', {
+    extend: 'Ext.data.Store',
+    
+    config : {
+<span id='SensorDevice-store-Sensors-cfg-model'>        model: 'SensorDevice.model.Sensor',
+</span><span id='SensorDevice-store-Sensors-cfg-data'>        data: [
+</span>            { name: 'File', description: 'Permette di scrivere o leggere un file nella memoria del dispositivo' },
+            { name: 'Camera', description: 'Permette di catturare un\'immagine tramite la fotocamera o la galleria del dispositivo'},
+            { name: 'Contacts' , description: 'Permette di consultare e modificare la rubrica del dispositivo'},
+            { name: 'Media', description: 'Permette di catturare o riprodurre file audio tramite il dispositivo' },
+            { name: 'Geolocation', description: 'Permette di visualizzare la posizione corrente del dispositivo'},
+            { name: 'Barcode', description: 'Permette di leggere un barcode tramite la fotocamera del dispositivo'}
+        ]
+    }
+});</pre>
+</body>
+</html>

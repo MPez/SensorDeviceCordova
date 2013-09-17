@@ -147,6 +147,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         var personalInfoStore = Ext.getStore('PersonalInfos');
         personalInfoStore.removeAll();
+        personalInfoStore.sync();
         personalInfoStore.add(currentInfo);
         personalInfoStore.sync();
     },

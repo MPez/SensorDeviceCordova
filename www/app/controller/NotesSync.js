@@ -483,10 +483,11 @@ Ext.define('SensorDevice.controller.NotesSync', {
      * Metodo chiamato al lancio dell'app; si occupa di controllare se esiste il record
      * con le informazioni sul dispositivo, in caso negativo avvisa l'utente di inserirli
      * prima di inizare a scrivere note e visualizza l'editor relativo.
-     * In seguit usa il SyncManager per caricare tutti gli store che sono stati registrati.
+     * In seguito usa il SyncManager per caricare tutti gli store che sono stati registrati.
      */
     launch: function() {
         this.callParent();
+        console.log('launch NotesSync');
         
         Ext.getStore('DevicesSync').load(function(records, operation, success) {
             if(Ext.getStore('DevicesSync').getCount() == 0) {
@@ -498,8 +499,6 @@ Ext.define('SensorDevice.controller.NotesSync', {
         
         var manager = this.getManager();
         manager.loadDatabase();
-
-        console.log('launch NotesSync');
     },
     
     /**
@@ -507,7 +506,6 @@ Ext.define('SensorDevice.controller.NotesSync', {
      */
     init: function() {
         this.callParent();
-        
         console.log('init NotesSync');
     }
 });
