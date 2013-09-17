@@ -1,3 +1,7 @@
+/**
+ * MediaDemo rappresenta la vista che visualizza i pulsanti tramite i quali è possibile
+ * catturare video, audio e immagini utilizzando le API di Apache Cordova
+ */
 Ext.define('SensorDevice.view.MediaDemo', {
     extend: 'Ext.Panel',
     requires: [
@@ -65,18 +69,45 @@ Ext.define('SensorDevice.view.MediaDemo', {
         ]
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di cattura audio;
+     * rilancia l'evento che verrà catturato dal controller
+     */
     onCaptureAudioButton: function(scope, e, eOpts) {
         console.log('onCaptureAudioButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di cattura audio
+         * @param {Ext.Component} this
+         */
         this.fireEvent('captureAudioCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di cattura video;
+     * rilancia l'evento che verrà catturato dal controller
+     */
     onCaptureVideoButton: function(scope, e, eOpts) {
         console.log('onCaptureVideoButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di cattura video
+         * @param {Ext.Component} this
+         */
         this.fireEvent('captureVideoCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di cattura immagini;
+     * rilancia l'evento che verrà catturato dal controller
+     */
     onCaptureImageButton: function(scope, e, eOpts) {
         console.log('onCaptureImageButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di cattura immagini
+         * @param {Ext.Component} this
+         */
         this.fireEvent('captureImageCommand', this);
     }
 });

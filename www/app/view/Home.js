@@ -1,3 +1,7 @@
+/**
+ * Home rappresenta la vista della pagina principale dell'app; avendo un layout di tipo card,
+ * i suoi item sono le pagine che visualizzano le diverse funzionalità offerte dall'app.
+ */
 Ext.define('SensorDevice.view.Home', {
     extend: 'Ext.Container',
     requires: [
@@ -12,19 +16,27 @@ Ext.define('SensorDevice.view.Home', {
     alias: 'widget.home',
     
     config: {
-        //styleHtmlContent: true,
+        /**
+         * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+         * da impostare a 100% per consentire la visualizzazione dei diversi componenti.
+         */
         height: '100%',
+        /**
+         * @cfg
+         * Layout di tipo card che permette di scorrere le diverse pagine.
+         */
         layout: {
             type: 'card',
             animation: 'fade'
         },
-        setScrollable: true,
         
         items: [
+            /*
+            * item 0
+            * Pagina principale dell'app, contiene la barra del titolo e la lista
+            * che descrive e permette di selezionare le diverse funzionalità implementate.
+            */
             {
-                /*
-                 * item 0
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -36,55 +48,64 @@ Ext.define('SensorDevice.view.Home', {
                         itemId: 'sensorList',
                         store: 'Sensors',
                         itemTpl: '{name}: {description}',
+                        /**
+                        * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+                        * da impostare a 100% per consentire la visualizzazione della lista.
+                        */
                         height: '100%',
                         onItemDisclosure: true
                     }
                 ]
             },
+            /*
+            * item 1
+            * sensorList index 0
+            * Pagina relativa alla form con le informazioni personali dell'utente, che permette
+            * di testare il salvataggio e il recupero delle informazioni nel filesystem del dispositivo.
+            */
             {
-                /*
-                 * item 1
-                 * sensorList index 0
-                 */
                 items: 
                 { xtype: 'filedemo' }
             },
+            /*
+            * item 2
+            * sensorList index 1
+            * Pagina dimostrativa delle funzionalità di cattura immagine da fotocamera o da galleria.
+            */
             {
-                /*
-                 * item 2
-                 * sensorList index 1
-                 */
                 items: 
                 { xtype: 'camerademo' }
             },
+            /*
+            * item 3
+            * sensorList index 2
+            * Pagina dimostrativa che permette di recuperare l'elenco dei contatti dal dispositivo
+            * e di visualizzarli in una lista ordinata.
+            */
             {
-                /*
-                 * item 3
-                 * sensorList index 2
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
                         docked: 'top',
                         title: 'Contacts Demo',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
                         items: [
                             {
-                                xtype: 'button',
                                 itemId: 'backButton',
                                 ui: 'back',
                                 iconCls: 'arrow_left',
-                                iconMask: true
                             },
                             {
-                                xtype: 'button',
-                                text: 'Load contacts',
+                                iconCls: 'arrow_up',
                                 itemId: 'loadContactsButton',
                                 align: 'right'
                             },
                             {
-                                xtype: 'button',
-                                text: 'Delete all contacts',
-                                itemId: 'deleteContactsButton',
+                                iconCls: 'trash',
+                                itemId: 'trashContactsButton',
                                 align: 'right'
                             }
                         ]
@@ -93,6 +114,10 @@ Ext.define('SensorDevice.view.Home', {
                         xtype: 'list',
                         itemTpl: '{First} {Last}',
                         itemId: 'contactsList',
+                        /**
+                        * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+                        * da impostare a 100% per consentire la visualizzazione della lista.
+                        */
                         height: '100%',
                         store: 'Contacts',
                         loadingText: 'Loading contacts...',
@@ -102,19 +127,22 @@ Ext.define('SensorDevice.view.Home', {
                     }
                 ]
             },
+            /*
+            * item 4
+            * sensorList index 3
+            * Pagina relativa alle funzionalità di cattura video, audio e immagini dai sensori del dispositivo.
+            */
             {
-                /*
-                 * item 4
-                 * sensorList index 3
-                 */
                 items:
                 { xtype: 'mediademo' }
             },
+            /*
+            * item 5
+            * sensorList index 4
+            * Pagina che visualizza una mappa tramite le Google Maps API e permette di individuare
+            * la posizione attuale del dispositivo e di salvarla in uno store.
+            */
             {
-                /*
-                 * item 5
-                 * sensorList index 4
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -144,6 +172,10 @@ Ext.define('SensorDevice.view.Home', {
                     {
                         xtype: 'map',
                         itemId: 'map',
+                        /**
+                        * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+                        * da impostare a 100% per consentire la visualizzazione della mappa.
+                        */
                         height: '100%',
                         useCurrentLocation: false,
                         
@@ -154,11 +186,14 @@ Ext.define('SensorDevice.view.Home', {
                     }
                 ]
             },
+            /*
+            * item 6
+            * sensorList index 5
+            * Pagina dimostrativa della lettura di un barcode tramite il plugin BarcodeScanner per
+            * Apache Cordova. Le informazioni recuperate vengono salvate su uno store e visualizzate
+            * tramite una lista.
+            */
             {
-                /*
-                 * item 6
-                 * sensorList index 5
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -188,14 +223,20 @@ Ext.define('SensorDevice.view.Home', {
                         store: 'Barcodes',
                         loadingText: 'Loading barcodes...',
                         emptyText: 'No barcodes found.',
+                        /**
+                        * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+                        * da impostare a 100% per consentire la visualizzazione della lista.
+                        */
                         height: '100%'
                     }
                 ]
             },
+            /*
+            * item 7
+            * Pagina relativa alle posizioni salvate tramite la geolocalizzazione del dispositivo,
+            * tali informazioni vengono visualizzate su una lista.
+            */
             {
-                /*
-                 * item 7
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -218,6 +259,10 @@ Ext.define('SensorDevice.view.Home', {
                         xtype: 'list',
                         itemTpl: 'Latitude: {latitude}, Longitude: {longitude}, Timestamp: {timestamp}',
                         itemId: 'positionsList',
+                        /**
+                        * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+                        * da impostare a 100% per consentire la visualizzazione della lista.
+                        */
                         height: '100%',
                         store: 'Positions',
                         loadingText: 'Loading positions...',
@@ -244,9 +289,9 @@ Ext.define('SensorDevice.view.Home', {
                 fn: 'onLoadContactsButton'
             },
             {
-                delegate: '#deleteContactsButton',
+                delegate: '#trashContactsButton',
                 event: 'tap',
-                fn: 'onDeleteContactsButton'
+                fn: 'onTrashContactsButton'
             },
             {
                 delegate: '#locationButton',
@@ -276,56 +321,131 @@ Ext.define('SensorDevice.view.Home', {
         ]
     },
     
+    /**
+     * Metodo che cattura l'evento disclose della lista senorList;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onItemDisclose: function(scope, record, target, index, e, eOpts) {
         console.log('onItemDisclose');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante disclose del record selezionato.
+         * @param {Ext.Component} this
+         * @param {Number} Indice del record all'interno della lista.
+         */
         this.fireEvent('itemDiscloseCommand', this, index);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di ritorno alla pagina principale;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onBackButtonTap: function(scope, e, eOpts) {
         console.log('onBackButtonTap');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di ritorno alla pagina principale.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('backButtonCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di caricamento dei contatti
+     * dalla rubrica del dispositivo; rilancia l'evento che verrà catturato dal controller.
+     */
     onLoadContactsButton: function(scope, e, eOpts) {
         console.log('onLoadContactsButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di caricamento dei contatti.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('loadContactsCommand', this);
     },
     
-    onDeleteContactsButton: function() {
-        console.log('onDeleteContactsButton');
-        
-        this.fireEvent('deleteContactsCommand', this);        
+    /**
+     * Metodo che cattura l'evento tap del pulsante di eliminazione dei contatti dal relativo store;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
+    onTrashContactsButton: function() {
+        console.log('onTrashContactsButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di eliminazione dei contatti.
+         * @param {Ext.Component} this
+         */
+        this.fireEvent('trashContactsCommand', this);        
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di localizzazione posizione del dispositivo;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onLocationButton: function() {
         console.log('onLocationButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di localizzazione posizione.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('locationCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento maprender della mappa visualizzata;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onMapRender: function(scope, map, eOpts) {
         console.log('onMapRender');
-        
+        /**
+         * @event
+         * Lanciato alla renderizzazione della mappa a schermo.
+         * @param {Ext.Component} this
+         * @param {google.maps.Map} map
+         */
         this.fireEvent('mapRenderCommand', this, map);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante che visualizza la lista delle posizioni trovate;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onPositionButton: function(scope, e, eOpts) {
         console.log('onPositionButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di visualizzazione posizioni trovate.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('positionCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di ritorno alla pagina contenente la mappa;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onBackGeolocationButton: function(scope, e, eOpts) {
         console.log('onBackGeolocationButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di ritorno alla mappa.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('backGeolocationCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di scansione di barcode;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onScanBarcodeButton: function(scope, e, eOpts) {
         console.log('onScanBarcodeButton');
+        /**
+         * @event
+         * Lanciato alla pressione tap del pulsante di scansione di barcode.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('scanBarcodeCommand', this);
     }
 });

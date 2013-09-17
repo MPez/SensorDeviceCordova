@@ -1,3 +1,6 @@
+/**
+ * PersonalInfo rappresenta il modello per la registrazione di alcuni dati personali dell'utente
+ */
 Ext.define('SensorDevice.model.PersonalInfo', {
     extend: 'Ext.data.Model',
     

@@ -1,3 +1,7 @@
+/**
+ * Contacts rappresenta lo store locale utilizzato per salvare i contatti
+ * recuperati dalla rubrica del dispositivo mobile
+ */
 Ext.define('SensorDevice.store.Contacts', {
     extend: 'Ext.data.Store',
     requires: [

@@ -1,3 +1,6 @@
+/**
+ * Barcode rappresenta il modello per la lettura di codice a barre
+ */
 Ext.define('SensorDevice.model.Barcode', {
     extend: 'Ext.data.Model',
     

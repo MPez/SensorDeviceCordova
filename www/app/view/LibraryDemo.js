@@ -1,25 +1,35 @@
+/**
+ * LibraryDemo rappresenta la vista che visualizza i video e le registrazione
+ * effettuare tramite la fotocamera e il microfono del dispositivo.
+ */
 Ext.define('SensorDevice.view.LibraryDemo', {
     extend: 'Ext.Container',
     requires: [
         'Ext.TitleBar',
         'Ext.dataview.List',
         'Ext.Audio',
-        'Ext.Video'
+        'Ext.Video',
+        'Ext.Img'
     ],
     alias: 'widget.librarydemo',
     
     config: {
+        /**
+         * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+         * da impostare a 100% per consentire la visualizzazione della lista.
+         */
         height: '100%',
         layout: {
             type: 'card',
             animation: 'fade'
         },
-        setScrollable: true,
         items: [
+            /*
+            * item 0
+            * Comprende la barra del titolo e la lista relativa ai video e audio
+            * salvati nel relativo store
+            */
             {
-                /*
-                 * item #0
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -50,10 +60,11 @@ Ext.define('SensorDevice.view.LibraryDemo', {
                     }
                 ]
             },
+            /*
+            * item 1
+            * Comprende la barra del titolo e il componente audio da riprodurre
+            */
             {
-                /*
-                 * item #1
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -94,10 +105,11 @@ Ext.define('SensorDevice.view.LibraryDemo', {
                     }
                 ]
             },
+            /*
+            * item 2
+            * Comprende la barra del titolo e il componente video da riprodurre
+            */
             {
-                /*
-                 * item #2
-                 */
                 items: [
                     {
                         xtype: 'titlebar',
@@ -133,7 +145,39 @@ Ext.define('SensorDevice.view.LibraryDemo', {
                     {
                         xtype: 'video',
                         autoPause: true,
-                        itemId: 'videoItem'
+                        itemId: 'videoItem',
+                        width: 640,
+                        height: 320
+                    }
+                ]
+            },
+            /*
+             * item 3
+             * Comprende la barra del titolo e l'immagine da visualizzare
+             */
+            {
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        title: 'Image',
+                        docked: 'top',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
+                        items: [
+                            {
+                                itemId: 'backLibraryButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left'
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'img',
+                        itemId: 'imageItem',
+                        height: 400,
+                        width: 400
                     }
                 ]
             }
@@ -188,18 +232,47 @@ Ext.define('SensorDevice.view.LibraryDemo', {
         ]
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di eliminazione dello store relativo
+     * ai file audio e video; rilancia l'evento che verrà catturato dal controller.
+     */
     onTrashLibraryButton: function(scope, e, eOpts) {
         console.log('onTrashLibraryButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di eliminazione dello store relativo
+         * ai file audio e video.
+         * @param {Ext.Component} this
+         */
         this.fireEvent('trashLibraryCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento del pulsante disclose del record selezionato;
+     * rilancia l'evento che verrà catturato dal controller.
+     */
     onMediaListDisclose: function(scope, record, target, index, evt, options) {
         console.log('onMediaListDisclose');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante disclose del record selezionato.
+         * @param {Ext.Component} this
+         * @param {Ext.data.Model} record Istanza del modello del file audio o video.
+         * @param {Number} index Indice del record all'interno della lista.
+         */
         this.fireEvent('mediaListDiscloseCommand', this, record, index);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di ritorno alla libreria;
+     * rilancia l'evento che verrà catturato dal controller
+     */
     onBackLibraryButton: function(scope, e, eOpts) {
         console.log('onBackLibraryButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di ritorno alla libreria.
+         */
         this.fireEvent('backLibraryCommand', this);
     },
     

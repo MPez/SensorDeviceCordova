@@ -1,3 +1,7 @@
+/**
+ * Barcodes rappresenta lo store webSQL utilizzato per gestire
+ * la lettura dei codici a barre
+ */
 Ext.define('SensorDevice.store.Barcodes', {
     extend: 'Ext.data.Store',
     requires: [

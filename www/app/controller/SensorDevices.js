@@ -1,3 +1,8 @@
+/**
+ * SensorDevice rappresenta il controller che si occupa di gestire tutti gli eventi generati
+ * dalle diverse pagine disponibili nell'app, dimostrative dell'utilizzo dei diversi sensori
+ * disponibili sul dispositivo.
+ */
 Ext.define('SensorDevice.controller.SensorDevices', {
     extend: 'Ext.app.Controller',
     requires: [
@@ -6,6 +11,10 @@ Ext.define('SensorDevice.controller.SensorDevices', {
     ],
     
     config: {
+        /**
+         * @cfg
+         * Riferimenti alle pagine controllate.
+         */
         refs: {
             homeView: 'home',
             cameraDemoView: 'camerademo',
@@ -14,12 +23,16 @@ Ext.define('SensorDevice.controller.SensorDevices', {
             libraryDemoView: 'librarydemo',
             fileDemoView: 'filedemo'
         },
+        /**
+         * @cfg
+         * Metodi di controllo degli eventi lanciati dalle diverse pagine.
+         */
         control: {
             homeView: {
                 itemDiscloseCommand: 'onItemDiscloseCommand',
                 backButtonCommand: 'onBackButtonCommand',
                 loadContactsCommand: 'onLoadContactsCommand',
-                deleteContactsCommand: 'onDeleteContactsCommand',
+                trashContactsCommand: 'onTrashContactsCommand',
                 locationCommand: 'onLocationCommand',
                 mapRenderCommand: 'onMapRenderCommand',
                 positionCommand: 'onPositionCommand',
@@ -54,12 +67,20 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         }
     },
     
+    /**
+     * Metodo che cattura l'evento disclose della lista delle funzionalità disponibili.
+     * Se la funzionalità selezionata è FileDemo e non sono presenti record nello store,
+     * viene creato un record fittizio da inserire nella form.
+     * A seconda dell'indice passato come parametro viene visualizzata la pagina corrispondente.
+     * 
+     * @param {Ext.Component} home Scope di riferimento della pagina principale.
+     * @param {Number} index Indice del record selezionato dalla lista.
+     */
     onItemDiscloseCommand: function(home, index) {
         console.log('onItemDiscloseCommand');
         
         if (index == 0) {
             console.log('onFileDemoForm');
-            
             var personalInfoStore = Ext.getStore('PersonalInfos');
             
             if (personalInfoStore.getCount() == 0) {
@@ -84,11 +105,21 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         home.setActiveItem(index+1);
     },
     
+    /**
+     * Metodo che cattura l'evento di ritorno alla pagina principale visualizzando la pagina corretta.
+     */
     onBackButtonCommand: function(home) {
         console.log('onBackButtonCommand');
         home.setActiveItem(0);
     },
     
+    /**
+     * Metodo che cattura l'evento di salvataggio della form relativa alle informazioni
+     * personali dell'utente.
+     * Recupera i valori modificati nei campi della form e aggiorna il record, effettua la validazione
+     * dei campi e nel caso trovi errori, visualizza un messaggio; infine, recupera lo store e aggiorna
+     * il primo e unico record.
+     */
     onSaveFormCommand: function() {
         console.log('onSaveFormCommand');
         
@@ -120,22 +151,33 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         personalInfoStore.sync();
     },
     
+    /**
+     * Metodo che cattura l'evento di caricamento dei campi della form dallo store;
+     * agisce recuperando dallo store il record salvato e imposta tale record nella form.
+     */
     onLoadFormCommand: function() {
         console.log('onLoadFormCommand');
-        
         var personalInfoStore = Ext.getStore('PersonalInfos');
         var newInfo = personalInfoStore.getAt(0);
         var fileDemo = this.getFileDemoView();
         fileDemo.setRecord(newInfo);
     },
     
+    /**
+     * Metodo che cattura l'evento di eliminazione dei campi della form;
+     * agisce pulendo tutti i campi della form.
+     */
     onDeleteFormCommand: function() {
         console.log('onDeleteFormCommand');
-        
         var fileDemo = this.getFileDemoView();
         fileDemo.reset();
     },
     
+    /**
+     * Metodo che cattura l'evento di cancellazione del record dallo store delle informazioni personali;
+     * agisce recuperando lo store ed eliminando i record presenti, in seguito richiama
+     * il metodo per pulire la form e infine visualizza un messaggio di avviso.
+     */
     onTrashPersonalInfoCommand: function() {
         console.log('onTrashPersonalInfoCommand');
         Ext.getStore('PersonalInfos').removeAll();
@@ -143,24 +185,40 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         Ext.Msg.alert('Attention', 'The Personal Info\'s store has been deleted.');
     },
     
+    /**
+     * Metodo che cattura l'evento di cancellazione dei record dallo store della libreria;
+     * agisce recuperando lo store ed eliminando i record presenti, in seguito visualizza
+     * un messaggio di avviso.
+     */
     onTrashLibraryCommand: function() {
         console.log('onTrashLibraryCommand');
         Ext.getStore('AudioVideos').removeAll();
         Ext.Msg.alert('Attention', 'The Media\'s store has been deleted.');
     },
     
+    /**
+     * Metodo che cattura l'evento disclose dalla lista dei file audio, video e immagini;
+     * a seconda del tipo del file imposta l'url corretto e visualizza la corretta pagina per riprodurlo .
+     */
     onMediaListDiscloseCommand: function(library, record, index) {
         console.log('onMediaListDiscloseCommand');
         if (record.get('type').search(/^audio/) != -1) {
             library.getAt(1).getComponent('audioItem').setUrl(record.get('path'));
             library.setActiveItem(1);
         }
-        else {
+        else if(record.get('type').search(/^video/) != -1){
             library.getAt(2).getComponent('videoItem').setUrl(record.get('path'));
             library.setActiveItem(2);
         }
+        else {
+            library.getAt(3).getComponent('imageItem').setSrc(record.get('path'));
+            library.setActiveItem(3);
+        }
     },
     
+    /**
+     * Metodo che cattura l'evento di ritorno alla libreria dei media impostando la pagina corretta.
+     */
     onBackLibraryCommand: function() {
         console.log('onBackLibraryCommand');
         this.getLibraryDemoView().setActiveItem(0);
@@ -196,8 +254,13 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         library.getAt(2).getComponent('videoItem').stop();
     },
     
-    /*
-     * Cordova capture
+    //------------------------------------------------------//
+    //             Apache Cordova Capture plugin            //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di cattura di un file audio; agisce chiamando il metodo
+     * captureAudio con parametri le funzioni di successo o di errore dell'operazione.
      */
     onCaptureAudioCommand: function() {
         console.log('onCaptureAudioCommand');
@@ -206,6 +269,10 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         navigator.device.capture.captureAudio(me.captureMediaSuccess, me.captureError);
     },
     
+    /**
+     * Metodo che cattura l'evento di cattura di un file video; agisce chiamando il metodo
+     * captureVIdeo con parametri le funzioni di successo o di errore dell'operazione.
+     */
     onCaptureVideoCommand: function() {
         console.log('onCaptureVideoCommand');
         var me = this;
@@ -213,6 +280,21 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         navigator.device.capture.captureVideo(me.captureMediaSuccess, me.captureError);
     },
     
+    /**
+     * Metodo che cattura l'evento di cattura di un immagine; agisce chiamando il metodo
+     * captureImage con parametri le funzioni di successo o di errore dell'operazione.
+     */
+    onCaptureImageCommand: function() {
+        console.log('onCaptureImageCommand');
+        var me = this;
+        
+        navigator.device.capture.captureImage(me.captureMediaSuccess, me.captureError);
+    },
+    
+    /**
+     * Metodo che gestisce il successo dell'operazione di cattura recuperando i valori del file creato
+     * e salvandoli in un record dello store AudioVideo.
+     */
     captureMediaSuccess: function(mediaFiles) {
         console.log('captureMediaSuccess');
         var now = new Date();
@@ -228,13 +310,25 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         mediaStore.sync();
     },
     
+    /**
+     * Metodo che gestisce l'errore nell'operazione di cattura inviando un messaggio di allerta all'utente.
+     */
     captureError: function(error) {
         console.log('captureError');
         Ext.Msg.alert('Error', error.code);
     },
     
-    /*
-     * Cordova file
+    //------------------------------------------------------//
+    //             Apache Cordova File plugin               //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di backup delle informazioni personali dell'utente; agisce recuperando
+     * lo store corretto e il record salvato, in seguito effettua una serie di chiamate a metodi del plugin
+     * per recuperare i riferimenti al filesystem del dispositivo, alla directory propria dell'app e al file
+     * dove si desidera salvare i dati.
+     * Infine crea un fileWriter che si occupa di scrivere le informazioni sul file e ad operazione conclusa
+     * con avvisa l'utente del successo o del fallimento dell'operazione.
      */
     onBackupFormCommand: function(fileDemo) {
         console.log('onBackupFormCommand');
@@ -277,6 +371,14 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         }
     },
     
+    /**
+     * Metodo che cattura l'evento di restore delle informazioni personali dell'utente; agisce
+     * effettuando una serie di chiamate per recuperare i riferimenti al filesystem del dispositivo,
+     * alla directory propria dell'app e al file dove si desidera salvare i dati.
+     * Infine crea un fileReader che si occupa di leggere il contenuto del file e ad operazione conclusa
+     * positivamente recupera lo store corretto e inserisce il record recuperato; in caso di errore
+     * avvisa l'utente.
+     */
     onRestoreFormCommand: function() {
         console.log('onRestoreFormCommand');
         
@@ -327,13 +429,18 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         function fail(error) {
             console.log(error.code);
-            
             Ext.Msg.alert('Error', error.code);
         }
     },
     
-    /*
-     * Cordova camera capture
+    //------------------------------------------------------//
+    //            Apache Cordova Camera plugin              //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di apertura della fotocamera del dispositivo; agisce effettuando
+     * una chiamata al metodo getPicture passando il nome delle funzioni di successo e fallimento
+     * e un oggetto di configurazione con le impostazioni desiderate per la cattura.
      */
     onCameraButtonCommand: function() {
         console.log('onCameraButtonCommand');
@@ -352,6 +459,11 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         });
     },
     
+    /**
+     * Metodo che cattura l'evento di apertura della galleria del dispositivo; agisce effettuando
+     * una chiamata al metodo getPicture passando il nome delle funzioni di successo e fallimento
+     * e un oggetto di configurazione con le impostazioni desiderate per la cattura.
+     */
     onGalleryButtonCommand: function() {
         console.log('onGalleryButtonCommand');
         
@@ -369,6 +481,13 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         });
     },
     
+    /**
+     * Metodo che gestisce il successo dell'operazione di cattura dell'immagine tramite fotocamera
+     * o galleria. Agisce creando un nuovo record e impostando i valori della nuova immagine.
+     * In seguito recupera lo store corretto e registra il nuovo record.
+     *
+     * @param {String} image Uri della nuova immagine catturata.
+     */
     onCaptureSuccess: function(image) {
         console.log('onCaptureSuccess');
         
@@ -383,24 +502,40 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         pictureStore.sync();
     },
     
+    /**
+     * Metodo che gestisce il fallimento dell'operazione di cattura dell'immagine visualizzando
+     * un messaggio di allerta per l'utente.
+     */
     onCaptureFailure: function() {
         console.log('onCaptureFailure');
-        
         Ext.Msg.alert('Error', 'There was an error when acquiring the picture.');
     },
     
-    /*
-     * Cordova contacts
+    //------------------------------------------------------//
+    //            Apache Cordova Contacts plugin            //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di caricamento dei contatti del dispositivo;
+     * agisce effettuando una chiamata al metodo find passando come paramentri un oggetto di configurazione
+     * contenente i nomi dei campi di interesse e le funzioni di successo e fallimento.
      */
     onLoadContactsCommand: function() {
         console.log('onLoadContactsCommand');
         
         var me = this;
         
-        var contactsField = ['displayName', 'emails', 'phoneNumbers'];
-        navigator.contacts.find(contactsField, me.onContactSuccess, me.onContactError);
+        var contactFields = ['displayName', 'emails', 'phoneNumbers'];
+        navigator.contacts.find(contactFields, me.onContactSuccess, me.onContactError);
     },
     
+    /**
+     * Metodo che gestisce il successo del caricamento dei contatti del dispositivo; agisce
+     * recuperando lo store corretto e creando un nuovo record con i campi desiderati per ogni
+     * contatto trovato e li inserisce nello store.
+     *
+     * @param {Object} contacts Oggetto che contiene un array di contatti.
+     */
     onContactSuccess: function(contacts) {
         console.log('onContactSuccess');
         
@@ -418,21 +553,36 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         contactsStore.sync();
     },
     
+    /**
+     * Metodo che gestisce il fallimento dell'operazione di caricamento dei contatti del dispositivo
+     * avvisando l'utente con un messaggio.
+     *
+     * @param {Object} contactError Oggetto che contiene l'errore che ha causato il fallimento
+     * dell'operazione.
+     */
     onContactError: function(contactError) {
         console.log('onContactError');
-        
-        Ext.Msg.alert('Error retrieving contacts');
+        Ext.Msg.alert('Error retrieving contacts', contactError.code);
     },
     
-    onDeleteContactsCommand: function() {
-        console.log('onDeleteContactsCommand');
-        
+    /**
+     * Metodo che cattura l'evento di cancellazione dei record dallo store dei contatti.
+     */
+    onTrashContactsCommand: function() {
+        console.log('onTrashContactsCommand');
         var contactsStore = Ext.getStore('Contacts');
         contactsStore.removeAll();
     },
     
-    /*
-     * Cordova geolocation
+    //------------------------------------------------------//
+    //          Apache Cordova Geolocation plugin           //
+    //                   Google Maps API                    //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di localizzazione del dispositivo; agisce effettuando
+     * una chiamata al metodo getCurrentPosition passando come parametri le funzioni di successo
+     * e fallimento e un oggetto di configurazione con le opzioni desiderate.
      */
     onLocationCommand: function() {
         console.log('onLocationCommand');
@@ -440,11 +590,18 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         var me = this;
         
         navigator.geolocation.getCurrentPosition(me.onLocationSuccess, me.onLocationError, {
-            enableHighAccuracy: false,
-            timeout: 5000
+            enableHighAccuracy: false
         });
     },
     
+    /**
+     * Metodo che gestisce il successo dell'operazione di localizzazione del dispositivo; agisce
+     * creando un record per salvare nello store la posizione corrente e imposta il nuovo centro
+     * sulla mappa con il relativo marker per visualizzare nella stessa la posizione attuale.
+     *
+     * @param {Object} position Oggetto che rappresenta la posizione corrente, contiene le coordinate
+     * e un timestamp.
+     */
     onLocationSuccess: function(position) {
         console.log('onLocationSuccess');
         
@@ -463,16 +620,15 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         positionStore.sync();
         
         var mapCmp = this.getHomeView().getAt(5).getComponent('map');
-        mapCmp.setMapCenter(
-            new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-            /*{
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            }*/
-        );
+        var map = mapCmp.getMap();
+        map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+        
+        /*
+        mapCmp.setMapCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
         mapCmp.setMapOptions({
             zoom: 15
         });
+        */
         
         var marker = new google.maps.Marker({
             map: mapCmp.getMap(),
@@ -482,34 +638,50 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         });
     },
     
+    /**
+     * Metodo che gestisce il fallimento dell'operazione di localizzazione avvisando l'utente con un messaggio.
+     */
     onLocationError: function(error) {
         console.log('onLocationFailure');
-        
         Ext.Msg.alert('Error retrieving position', error.code + ' ' + error.message);
     },
     
+    /**
+     * Metodo che cattura l'evento di renderizzazione della mappa.
+     */
     onMapRenderCommand: function(scope, map) {
         console.log('onMapRenderCommand');
-        
     },
     
+    /**
+     * Metodo che catura l'evento di visualizzazione della lista delle posizioni salvate.
+     */
     onPositionCommand: function(home) {
         console.log('onPositionCommand');
-        
         home.setActiveItem(7);
     },
     
+    /**
+     * Metodo che cattura l'evento di ritorno alla mappa.
+     */
     onBackGeolocationCommand: function(home) {
         console.log('onBackGeolocationCommand');
-        
         home.setActiveItem(5);
     },
     
-    /*
-     * Cordova plugin BarcodeScanner
+    //------------------------------------------------------//
+    //        Apache Cordova BarcodeScanner plugin          //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di apertura dello scanner; agisce effettuando una chiamata
+     * al metodo scan passando come parametri le funzioni di successo e fallimento.
+     * Se l'operazione va a buon fine i dati letti vengono salvati in un record dello store corretto,
+     * altrimenti viene avvisato l'utente tramite un messaggio.
      */
     onScanBarcodeCommand: function() {
         console.log('onScanBarcodeCommand');
+        
         cordova.plugins.barcodeScanner.scan(success, fail);
         
         function success(result) {
@@ -529,12 +701,18 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         }
     },
     
-    //called when the Application is initialized
+    /**
+     * Metodo chiamato all'inizializzazione dell'app.
+     */
     init: function() {
         console.log('init SensorDevices');
     },
     
-    //called when the Application is launched, remove if not needed
+    /**
+     * Metodo chiamato al lancio dell'app; si occupa di caricare gli store utilizzati.
+     *
+     * @param {Ext.app.Application} app
+     */
     launch: function(app) {
         console.log('launch SensorDevices');
         

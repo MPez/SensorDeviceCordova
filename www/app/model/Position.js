@@ -1,3 +1,7 @@
+/**
+ * Position rappresenta il modello per il salvataggio della posizione del dispositivo
+ * rilevata tramite il GPS e/o la rete Wi-Fi o 3G
+ */
 Ext.define('SensorDevice.model.Position', {
     extend: 'Ext.data.Model',
     

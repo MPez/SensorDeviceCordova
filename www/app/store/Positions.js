@@ -1,3 +1,7 @@
+/**
+ * Positions rappresenta lo store webSQL utilizzato per memorizzare
+ * la posizione del dispositivo acquisita tramite i sensori di posizionamento
+ */
 Ext.define('SensorDevice.store.Positions', {
     extend: 'Ext.data.Store',
     requires: [

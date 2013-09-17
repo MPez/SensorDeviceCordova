@@ -1,3 +1,6 @@
+/**
+ * Contact rappresenta il modello per la lettura dei contatti presenti nel dispositivo
+ */
 Ext.define('SensorDevice.model.Contact', {
     extend: 'Ext.data.Model',
     

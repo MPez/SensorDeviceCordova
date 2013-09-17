@@ -1,3 +1,9 @@
+/**
+ * FileDemo rappresenta la vista che visualizza un form nella quale si possono
+ * inserire alcuni dati personali dell'utente del dispositivo i quali posso essere salvati
+ * nel relativo store; una volta salvati, è possibile effettuare il backup e il restore di tale store
+ * e la cancellazione del record presente.
+ */
 Ext.define('SensorDevice.view.FileDemo', {
     extend: 'Ext.form.Panel',
     requires: [
@@ -10,8 +16,18 @@ Ext.define('SensorDevice.view.FileDemo', {
     alias: 'widget.filedemo',
     
     config: {
+        /**
+         * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+         * da impostare a 100% per consentire la visualizzazione della lista.
+         */
         height: '100%',
         items: [
+            /*
+             * Barra del titolo contenente i pulsanti di ritorno alla pagina principale,
+             * di salvataggio e caricamento del record nello store, di backup e restore dello store
+             * nella memoria interna del telefono, di pulizia dei campi della form e di cancellazione del
+             * record presente nello store.
+             */
             {
                 xtype: 'titlebar',
                 docked: 'top',
@@ -61,6 +77,9 @@ Ext.define('SensorDevice.view.FileDemo', {
                     }
                 ]
             },
+            /*
+             * Form contenente i campi relativi alle informazioni personali dell'utente.
+             */
             {
                 xtype: 'fieldset',
                 title: 'About you',
@@ -161,40 +180,82 @@ Ext.define('SensorDevice.view.FileDemo', {
             }
         ]
     },
-    
+    /**
+     * Metodo che cattura l'evento tap del pulsante di salvataggio della form
+     * e rilancia l'evento che verrà catturato dal controller
+     */
     onSaveFormButton: function(scope, e , eOpts) {
         console.log('onSaveFormButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di salvataggio della form
+         * @param {Ext.Component} this
+         */
         this.fireEvent('saveFormCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di caricamento del record
+     * e rilancia l'evento che verrà catturato dal controller
+     */
     onLoadFormButton: function(scope, e , eOpts) {
         console.log('onLoadFormButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di caricamento del record
+         */
         this.fireEvent('loadFormCommand');
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di backup dello store
+     * e rilancia l'evento che verrà catturato dal controller
+     */
     onBackupFormButton: function(scope, e , eOpts) {
         console.log('onBackupFormButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di backup dello store
+         */
         this.fireEvent('backupFormCommand');
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di restore dello store
+     * e rilancia l'evento che verrà catturato dal controller
+     */
     onRestoreFormButton: function(scope, e , eOpts) {
         console.log('onRestoreFormButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di restore dello store
+         */
         this.fireEvent('restoreFormCommand');
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di pulizia dei campi della form
+     * e rilancia l'evento che verrà catturato dal controller
+     */
     onDeleteFormButton: function(scope, e , eOpts) {
         console.log('onDeleteFormButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di pulizia dei campi della form
+         */
         this.fireEvent('deleteFormCommand', this);
     },
     
+    /**
+     * Metodo che cattura l'evento tap del pulsante di eliminazione del record dallo store
+     * e rilancia l'evento che verrà catturato dal controller
+     */
     onTrashPersonalInfoButton: function(scope, e , eOpts) {
         console.log('onTrashPersonalInfoButton');
-        
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di eliminazione del record dallo store
+         */
         this.fireEvent('trashPersonalInfoCommand');
     }
 });

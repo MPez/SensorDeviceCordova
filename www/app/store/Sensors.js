@@ -1,3 +1,7 @@
+/**
+ * Sensors rappresenta lo store inline utilizzato per visualizzare la lista
+ * delle funzionalità disponibili tramite l'app
+ */
 Ext.define('SensorDevice.store.Sensors', {
     extend: 'Ext.data.Store',
     

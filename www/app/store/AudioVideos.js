@@ -1,3 +1,7 @@
+/**
+ * AudioVideos rappresenta lo store locale utilizzato per la gestione
+ * di video e audio catturati tramite la fotocamera e il microfono del dispositivo mobile
+ */
 Ext.define('SensorDevice.store.AudioVideos', {
     extend: 'Ext.data.Store',
     requires: [

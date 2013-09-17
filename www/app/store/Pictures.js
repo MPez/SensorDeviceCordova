@@ -1,3 +1,7 @@
+/**
+ * Pictures rappresenta lo store locale utilizzato per salvare le immagini
+ * catturate tramite la fotocamera del dispositivo
+ */
 Ext.define('SensorDevice.store.Pictures', {
     extend: 'Ext.data.Store',
     requires: [
