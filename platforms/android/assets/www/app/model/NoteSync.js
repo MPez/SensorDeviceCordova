@@ -1,8 +1,8 @@
 /**
  * NotesSync rappresenta il modello di una nota utilizzata nella pagina MyNotes
  */
-Ext.define("SensorDevice.model.NoteSync", {
-    extend: "Ext.data.Model",
+Ext.define('SensorDevice.model.NoteSync', {
+    extend: 'Ext.data.Model',
     
     config: {
         fields: [

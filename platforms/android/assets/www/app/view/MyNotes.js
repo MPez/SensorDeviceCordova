@@ -118,25 +118,25 @@ Ext.define('SensorDevice.view.MyNotes', {
                     }
                 ]
             },
+            /*
+            * item 1
+            * Pagina che visualizza la form che descrive il contenuto dei diversi campi di una nota.
+            */
             {
-                /*
-                 * item 1
-                 * Pagina che visualizza la form che descrive il contenuto dei diversi campi di una nota.
-                 */
                 xtype: 'noteeditorsync'
             },
+            /*
+             * item 2
+             * Pagina che visualizza la form che descrive il conenuto dei diversi campi di un autore.
+             */
             {
-                /*
-                 * item 2
-                 * Pagina che visualizza la form che descrive il conenuto dei diversi campi di un autore.
-                 */
                 xtype: 'authoreditorsync'
             },
+            /*
+            * item 3
+            * Pagina che visualizza la form che descrive il conenuto dei diversi campi informativi del dispositivo.
+            */
             {
-                /*
-                 * item 3
-                 * Pagina che visualizza la form che descrive il conenuto dei diversi campi informativi del dispositivo.
-                 */
                 xtype: 'deviceinfoeditor'
             }
         ],

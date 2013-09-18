@@ -573,6 +573,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         console.log('onTrashContactsCommand');
         var contactsStore = Ext.getStore('Contacts');
         contactsStore.removeAll();
+        contactsStore.sync();
     },
     
     //------------------------------------------------------//
@@ -622,7 +623,8 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         var mapCmp = this.getHomeView().getAt(5).getComponent('map');
         var map = mapCmp.getMap();
-        map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+        var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+        map.setCenter(latLng);
         
         /*
         mapCmp.setMapCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
