@@ -19,11 +19,11 @@
 </span> * Device rappresenta il modello delle informazioni base del dispositivo, da utilizzare come identificativo
  * all'interno della pagina MyNotes per rendere univoco nel sistema ogni dispositivo utilizzato
  */
-Ext.define(&quot;SensorDevice.model.Device&quot;, {
-    extend: &quot;Ext.data.Model&quot;,
+Ext.define('SensorDevice.model.Device', {
+    extend: 'Ext.data.Model',
     requires: [
-        &quot;Ext.data.proxy.LocalStorage&quot;,
-        &quot;Ext.data.proxy.Sql&quot;
+        'Ext.data.proxy.LocalStorage',
+        'Ext.data.proxy.Sql'
     ],
     
     config: {

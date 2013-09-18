@@ -38,20 +38,20 @@ Ext.define('SensorDevice.view.DeviceInfoEditor', {
                 xtype: 'titlebar',
                 docked: 'top',
                 title: 'Edit device info',
+                defaults: {
+                    xtype: 'button',
+                    iconMask: true
+                },
                 items: [
                     {
-                        xtype: 'button',
                         itemId: 'backButton',
                         ui: 'back',
                         iconCls: 'arrow_left',
-                        iconMask: true,
                         align: 'left'
                     },
                     {
-                        xtype: 'button',
                         itemId: 'saveDeviceButton',
                         iconCls: 'add',
-                        iconMask: true,
                         align: 'right'
                     }
                 ]
