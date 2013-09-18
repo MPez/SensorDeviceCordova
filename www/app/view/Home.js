@@ -177,8 +177,9 @@ Ext.define('SensorDevice.view.Home', {
                         * da impostare a 100% per consentire la visualizzazione della mappa.
                         */
                         height: '100%',
-                        useCurrentLocation: false,
-                        
+                        /**
+                         * @cfg {Object} mapOptions Opzioni per la mappa come da specifiche Google Maps API
+                         */
                         mapOptions: {
                             center: new google.maps.LatLng(41.9, 12.483333),
                             zoom: 9
