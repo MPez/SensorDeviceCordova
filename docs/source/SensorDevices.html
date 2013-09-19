@@ -77,9 +77,9 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 trashLibraryCommand: 'onTrashLibraryCommand',
                 mediaListDiscloseCommand: 'onMediaListDiscloseCommand',
                 backLibraryCommand: 'onBackLibraryCommand',
-                playAudioCommand: 'onPlayAudioCommand',
-                pauseAudioCommand: 'onPauseAudioCommand',
-                stopAudioCommand: 'onStopAudioCommand'
+                playCommand: 'onPlayCommand',
+                pauseCommand: 'onPauseCommand',
+                stopCommand: 'onStopCommand'
             }
         }
     },
@@ -242,34 +242,55 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         this.getLibraryDemoView().setActiveItem(0);
     },
     
-<span id='SensorDevice-controller-SensorDevices-method-onPlayAudioCommand'>    onPlayAudioCommand: function(library) {
-</span>        console.log('onPlayAudioCommand');
-        library.getAt(1).getComponent('audioItem').play();
+<span id='SensorDevice-controller-SensorDevices-method-onPlayCommand'>    /**
+</span>     * Metodo che cattura l'evento di avvio riproduzione del media selezionato.
+     *
+     * @param {Ext.Component} library Pagina dalla quale è stato lanciato l'evento.
+     * @param {Ext.Component} button Pulsante che ha scatenato l'evento.
+     */
+    onPlayCommand: function(library, button) {
+        
+        if (button.getItemId() == 'playVideoButton') {
+            console.log('onPlayVideoCommand');
+            library.getAt(2).getComponent('videoItem').play();
+        } else {
+            console.log('onPlayAudioCommand');
+            library.getAt(1).getComponent('audioItem').play();
+        }
     },
     
-<span id='SensorDevice-controller-SensorDevices-method-onPauseAudioCommand'>    onPauseAudioCommand: function(library) {
-</span>        console.log('onPauseAudioCommand');
-        library.getAt(1).getComponent('audioItem').pause();
+<span id='SensorDevice-controller-SensorDevices-method-onPauseCommand'>    /**
+</span>     * Metodo che cattura l'evento di mettere in pausa la riproduzione del media selezionato.
+     *
+     * @param {Ext.Component} library Pagina dalla quale è stato lanciato l'evento.
+     * @param {Ext.Component} button Pulsante che ha scatenato l'evento.
+     */
+    onPauseCommand: function(library, button) {
+        
+        if (button.getItemId() == 'pauseVideoButton') {
+            console.log('onPauseVideoCommand');
+            library.getAt(2).getComponent('videoItem').pause();
+        } else {
+            console.log('onPauseAudioCommand');
+            library.getAt(1).getComponent('audioItem').pause();
+        }
     },
     
-<span id='SensorDevice-controller-SensorDevices-method-onStopAudioCommand'>    onStopAudioCommand: function(library) {
-</span>        console.log('onStopAudioCommand');
-        library.getAt(1).getComponent('audioItem').stop();
-    },
-    
-<span id='SensorDevice-controller-SensorDevices-method-onPlayVideoCommand'>    onPlayVideoCommand: function(library) {
-</span>        console.log('onPlayVideoCommand');
-        library.getAt(2).getComponent('videoItem').play();
-    },
-    
-<span id='SensorDevice-controller-SensorDevices-method-onPauseVideoCommand'>    onPauseVideoCommand: function(library) {
-</span>        console.log('onPauseVideoCommand');
-        library.getAt(2).getComponent('videoItem').pause();
-    },
-    
-<span id='SensorDevice-controller-SensorDevices-method-onStopVideoCommand'>    onStopVideoCommand: function(library) {
-</span>        console.log('onStopVideoCommand');
-        library.getAt(2).getComponent('videoItem').stop();
+<span id='SensorDevice-controller-SensorDevices-method-onStopCommand'>    /**
+</span>     * Metodo che cattura l'evento di arrestare la riproduzione del media selezionato.
+     *
+     * @param {Ext.Component} library Pagina dalla quale è stato lanciato l'evento.
+     * @param {Ext.Component} button Pulsante che ha scatenato l'evento.
+     */
+    onStopCommand: function(library, button) {
+        
+        if (button.getItemId() == 'stopVideoButton') {
+            console.log('onStopVideoCommand');
+            library.getAt(2).getComponent('videoItem').stop();
+        } else {
+            console.log('onStopAudioCommand');
+            library.getAt(1).getComponent('audioItem').stop();
+        }
     },
     
     //------------------------------------------------------//

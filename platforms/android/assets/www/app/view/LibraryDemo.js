@@ -19,6 +19,10 @@ Ext.define('SensorDevice.view.LibraryDemo', {
          * da impostare a 100% per consentire la visualizzazione della lista.
          */
         height: '100%',
+        /**
+         * @cfg
+         * Layout di tipo card che permette di scorrere le diverse pagine.
+         */
         layout: {
             type: 'card',
             animation: 'fade'
@@ -68,6 +72,7 @@ Ext.define('SensorDevice.view.LibraryDemo', {
                 items: [
                     {
                         xtype: 'titlebar',
+                        itemId: 'audioTitlebar',
                         title: 'Audio',
                         docked: 'top',
                         defaults: {
@@ -113,6 +118,7 @@ Ext.define('SensorDevice.view.LibraryDemo', {
                 items: [
                     {
                         xtype: 'titlebar',
+                        itemId: 'videoTitlebar',
                         title: 'Video',
                         docked: 'top',
                         defaults: {
@@ -159,6 +165,7 @@ Ext.define('SensorDevice.view.LibraryDemo', {
                 items: [
                     {
                         xtype: 'titlebar',
+                        itemId: 'imageTitlebar',
                         title: 'Image',
                         docked: 'top',
                         defaults: {
@@ -202,32 +209,32 @@ Ext.define('SensorDevice.view.LibraryDemo', {
             {
                 delegate: '#playAudioButton',
                 event: 'tap',
-                fn: 'onPlayAudioButton'
+                fn: 'onPlayButton'
             },
             {
                 delegate: '#pauseAudioButton',
                 event: 'tap',
-                fn: 'onPauseAudioButton'
+                fn: 'onPauseButton'
             },
             {
                 delegate: '#stopAudioButton',
                 event: 'tap',
-                fn: 'onStopAudioButton'
+                fn: 'onStopButton'
             },
             {
                 delegate: '#playVideoButton',
                 event: 'tap',
-                fn: 'onPlayVideoButton'
+                fn: 'onPlayButton'
             },
             {
                 delegate: '#pauseVideoButton',
                 event: 'tap',
-                fn: 'onPauseVideoButton'
+                fn: 'onPauseButton'
             },
             {
                 delegate: '#stopVideoButton',
                 event: 'tap',
-                fn: 'onStopVideoButton'
+                fn: 'onStopButton'
             }
         ]
     },
@@ -250,6 +257,9 @@ Ext.define('SensorDevice.view.LibraryDemo', {
     /**
      * Metodo che cattura l'evento del pulsante disclose del record selezionato;
      * rilancia l'evento che verrà catturato dal controller.
+     *
+     * @param {Ext.data.Model} record Istanza del modello del file audio o video.
+     * @param {Number} index Indice del record all'interno della lista.
      */
     onMediaListDisclose: function(scope, record, target, index, evt, options) {
         console.log('onMediaListDisclose');
@@ -276,33 +286,54 @@ Ext.define('SensorDevice.view.LibraryDemo', {
         this.fireEvent('backLibraryCommand', this);
     },
     
-    onPlayAudioButton: function(scope, e, eOpts) {
-        console.log('onPlayAudioButton');
-        this.fireEvent('playAudioCommand', this);
+    /**
+     * Metodo che consente di avviare la riproduzione del media.
+     *
+     * @param {Ext.Component} scope Pulsante che ha scatenato l'evento.
+     */
+    onPlayButton: function(scope, e, eOpts) {
+        console.log('onPlayButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante play.
+         *
+         * @param {Ext.Component} this
+         * @param {Ext.Component} scope Pulsante che ha scatenato l'evento.
+         */
+        this.fireEvent('playCommand', this, scope);
     },
     
-    onPauseAudioButton: function(scope, e, eOpts) {
-        console.log('onPauseAudioButton');
-        this.fireEvent('pauseAudioCommand', this);
+    /**
+     * Metodo che consente di mettere in pausa la riproduzione del media.
+     *
+     * @param {Ext.Component} scope Pulsante che ha scatenato l'evento.
+     */
+    onPauseButton: function(scope, e, eOpts) {
+        console.log('onPauseButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante pause.
+         *
+         * @param {Ext.Component} this
+         * @param {Ext.Component} scope Pulsante che ha scatenato l'evento.
+         */
+        this.fireEvent('pauseCommand', this, scope);
     },
     
-    onStopAudioButton: function(scope, e, eOpts) {
-        console.log('onStopAudioButton');
-        this.fireEvent('stopAudioCommand', this);
-    },
-    
-    onPlayVideoButton: function(scope, e, eOpts) {
-        console.log('onPlayVideoButton');
-        this.fireEvent('playVideoCommand', this);
-    },
-    
-    onPauseVideoButton: function(scope, e, eOpts) {
-        console.log('onPauseVideoButton');
-        this.fireEvent('pauseVideoCommand', this);
-    },
-    
-    onStopVideoButton: function(scope, e, eOpts) {
-        console.log('onStopVideoButton');
-        this.fireEvent('stopVideoCommand', this);
+    /**
+     * Metodo che consente di fermare la riproduzione del media.
+     *
+     * @param {Ext.Component} scope Pulsante che ha scatenato l'evento.
+     */
+    onStopButton: function(scope, e, eOpts) {
+        console.log('onStopButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante stop.
+         *
+         * @param {Ext.Component} this
+         * @param {Ext.Component} scope Pulsante che ha scatenato l'evento.
+         */
+        this.fireEvent('stopCommand', this, scope);
     }
 });

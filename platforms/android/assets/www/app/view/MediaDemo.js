@@ -43,7 +43,7 @@ Ext.define('SensorDevice.view.MediaDemo', {
             },
             {
                 xtype: 'button',
-                text: 'Capture Image',
+                text: 'Capture image',
                 itemId: 'captureImageButton',
                 height: 40,
                 margin: '20 10'
