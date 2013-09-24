@@ -128,8 +128,38 @@ Ext.define('SensorDevice.view.Home', {
                 ]
             },
             /*
-            * item 4
-            * sensorList index 3
+             * item 4
+             * sensorList index 3
+             * Pagina che visualizza le informazioni riguardanti la connessione in atto del dispositivo.
+             */
+            {
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        docked: 'top',
+                        title: 'Connection',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
+                        items: [
+                            {
+                                itemId: 'backButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left'
+                            },
+                            {
+                                itemId: 'connectionButton',
+                                iconCls: 'refresh',
+                                align: 'right'
+                            }
+                        ]
+                    }
+                ]
+            },
+            /*
+            * item 5
+            * sensorList index 4
             * Pagina relativa alle funzionalità di cattura video, audio e immagini dai sensori del dispositivo.
             */
             {
@@ -137,8 +167,8 @@ Ext.define('SensorDevice.view.Home', {
                 { xtype: 'mediademo' }
             },
             /*
-            * item 5
-            * sensorList index 4
+            * item 6
+            * sensorList index 5
             * Pagina che visualizza una mappa tramite le Google Maps API e permette di individuare
             * la posizione attuale del dispositivo e di salvarla in uno store.
             */
@@ -188,8 +218,8 @@ Ext.define('SensorDevice.view.Home', {
                 ]
             },
             /*
-            * item 6
-            * sensorList index 5
+            * item 7
+            * sensorList index 6
             * Pagina dimostrativa della lettura di un barcode tramite il plugin BarcodeScanner per
             * Apache Cordova. Le informazioni recuperate vengono salvate su uno store e visualizzate
             * tramite una lista.
@@ -233,7 +263,7 @@ Ext.define('SensorDevice.view.Home', {
                 ]
             },
             /*
-            * item 7
+            * item 8
             * Pagina relativa alle posizioni salvate tramite la geolocalizzazione del dispositivo,
             * tali informazioni vengono visualizzate su una lista.
             */
@@ -293,6 +323,11 @@ Ext.define('SensorDevice.view.Home', {
                 delegate: '#trashContactsButton',
                 event: 'tap',
                 fn: 'onTrashContactsButton'
+            },
+            {
+                delegate: '#connectionButton',
+                event: 'tap',
+                fn: 'onConnectionButton'
             },
             {
                 delegate: '#locationButton',
@@ -377,6 +412,20 @@ Ext.define('SensorDevice.view.Home', {
          * @param {Ext.Component} this
          */
         this.fireEvent('trashContactsCommand', this);        
+    },
+    
+    /**
+     * Metodo che cattura l'evento tap del pulsante di recupero informazioni sulla connessione
+     * del dispositivo; rilancia l'evento che verrà catturato dal controller.
+     */
+    onConnectionButton: function() {
+        console.log('onConnectionButton');
+        /**
+         * @event
+         * Lanciato alla pressione del pulsante di recupero informazioni sulla connessione.
+         * @param {Ext.Component} this
+         */
+        this.fireEvent('connectionCommand', this);        
     },
     
     /**

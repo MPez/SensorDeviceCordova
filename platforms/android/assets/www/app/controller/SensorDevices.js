@@ -33,6 +33,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 backButtonCommand: 'onBackButtonCommand',
                 loadContactsCommand: 'onLoadContactsCommand',
                 trashContactsCommand: 'onTrashContactsCommand',
+                connectionCommand: 'onConnectionCommand',
                 locationCommand: 'onLocationCommand',
                 mapRenderCommand: 'onMapRenderCommand',
                 positionCommand: 'onPositionCommand',
@@ -539,8 +540,8 @@ Ext.define('SensorDevice.controller.SensorDevices', {
     
     /**
      * Metodo che cattura l'evento di caricamento dei contatti del dispositivo;
-     * agisce effettuando una chiamata al metodo find passando come paramentri un oggetto di configurazione
-     * contenente i nomi dei campi di interesse e le funzioni di successo e fallimento.
+     * agisce effettuando una chiamata al metodo find passando come paramentri due oggetti di configurazione,
+     * contenenti i nomi dei campi di interesse e le opzioni di filtraggio, e le funzioni di successo e fallimento.
      */
     onLoadContactsCommand: function() {
         console.log('onLoadContactsCommand');
@@ -628,6 +629,31 @@ Ext.define('SensorDevice.controller.SensorDevices', {
     },
     
     //------------------------------------------------------//
+    //           Apache Cordova Connection plugin           //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che cattura l'evento di recupero informazioni sulla connessione del dispositivo.
+     */
+    onConnectionCommand: function() {
+        console.log('onConnectionCommand');
+        
+        var type = navigator.connection.type;
+        
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.CELL]     = 'Cell generic connection';
+        states[Connection.NONE]     = 'No network connection';
+        
+        Ext.Msg.alert('Connection information', 'Connection type: ' + states[type]);
+    },
+    
+    //------------------------------------------------------//
     //          Apache Cordova Geolocation plugin           //
     //                   Google Maps API                    //
     //------------------------------------------------------//
@@ -672,7 +698,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         positionStore.add(newPosition);
         positionStore.sync();
         
-        var mapCmp = this.getHomeView().getAt(5).getComponent('map');
+        var mapCmp = this.getHomeView().getAt(6).getComponent('map');
         var map = mapCmp.getMap();
         var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         
@@ -711,7 +737,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onPositionCommand: function(home) {
         console.log('onPositionCommand');
-        home.setActiveItem(7);
+        home.setActiveItem(8);
     },
     
     /**
@@ -719,7 +745,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onBackGeolocationCommand: function(home) {
         console.log('onBackGeolocationCommand');
-        home.setActiveItem(5);
+        home.setActiveItem(6);
     },
     
     //------------------------------------------------------//
