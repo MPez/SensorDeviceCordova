@@ -8,8 +8,10 @@ Ext.define('SensorDevice.model.Contact', {
         identifier: 'uuid',
         fields: [
             {name: 'name', type: 'string'},
+            {name: 'surname', type: 'string'},
             {name: 'email' , type:'string'},
-            {name: 'phoneNumber', type: 'string'}
+            {name: 'phoneNumber', type: 'string'},
+            {name: 'address', type: 'string'}
         ]
     }
 });

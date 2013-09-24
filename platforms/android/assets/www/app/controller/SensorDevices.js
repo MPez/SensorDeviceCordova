@@ -249,11 +249,12 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      * @param {Ext.Component} button Pulsante che ha scatenato l'evento.
      */
     onPauseCommand: function(library, button) {
-        console.log('onPauseCommand');
         
         if (button.getItemId() == 'pauseVideoButton') {
+            console.log('onPauseVideoCommand');
             library.getAt(2).getComponent('videoItem').pause();
         } else {
+            console.log('onPauseAudioCommand');
             library.getAt(1).getComponent('audioItem').pause();
         }
     },
@@ -265,11 +266,12 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      * @param {Ext.Component} button Pulsante che ha scatenato l'evento.
      */
     onStopCommand: function(library, button) {
-        console.log('onStopCommand');
         
         if (button.getItemId() == 'stopVideoButton') {
+            console.log('onStopVideoCommand');
             library.getAt(2).getComponent('videoItem').stop();
         } else {
+            console.log('onStopAudioCommand');
             library.getAt(1).getComponent('audioItem').stop();
         }
     },
@@ -545,8 +547,12 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         var me = this;
         
-        var contactFields = ['displayName', 'emails', 'phoneNumbers'];
-        navigator.contacts.find(contactFields, me.onContactSuccess, me.onContactError);
+        var contactFields = ['*'];
+        var contactFindOptions = {
+            filter: '',
+            multiple: true
+        };
+        navigator.contacts.find(contactFields, me.onContactSuccess, me.onContactError, contactFindOptions);
     },
     
     /**
@@ -561,12 +567,38 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         var contactsStore = Ext.getStore('Contacts');
         
-        for (var i = 0; i < contacts.lenght; i++) {
+        for (var i = 0; i < contacts.length; i++) {
+            var deviceContact = contacts[i];
+            
             var contact = Ext.create('SensorDevice.model.Contact', {
-                name: contacts[i].displayName,
-                email: contacts[i].emails[0],
-                phoneNumber: contacts[i].phoneNumbers[0]
+                name: '',
+                surname: '',
+                email: '',
+                phoneNumber: '',
+                address: ''
             });
+            
+            if (deviceContact.name) {
+                if (deviceContact.name.givenName) {
+                    contact.set('name', deviceContact.name.givenName);
+                }
+                if (deviceContact.name.familyName) {
+                    contact.set('surname', deviceContact.name.familyName);
+                }
+            }
+
+            if (deviceContact.emails) {
+                contact.set('email', deviceContact.emails[0].value);
+            }
+
+            if (deviceContact.phoneNumbers) {
+                contact.set('phoneNumber', deviceContact.phoneNumbers[0].value);
+            }
+
+            if (deviceContact.addresses) {
+                contact.set('address', deviceContact.addresses[0].value);
+            }
+                
             contactsStore.add(contact);
         }
         
@@ -642,19 +674,18 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         var mapCmp = this.getHomeView().getAt(5).getComponent('map');
         var map = mapCmp.getMap();
-        var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-        map.setCenter(latLng);
+        var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         
-        /*
-        mapCmp.setMapCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+        
+        mapCmp.setMapCenter(latLng);
         mapCmp.setMapOptions({
             zoom: 15
         });
-        */
+        
         
         var marker = new google.maps.Marker({
             map: mapCmp.getMap(),
-            position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+            position: latLng,
             icon: 'img/maps-32.png',
             animation: google.maps.Animation.DROP
         });
@@ -743,5 +774,6 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         Ext.getStore('PersonalInfos').load();
         Ext.getStore('Positions').load();
         Ext.getStore('Barcodes').load();
+        Ext.getStore('Contacts').load();
     }
 });

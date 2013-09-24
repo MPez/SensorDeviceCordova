@@ -18,15 +18,15 @@ Ext.define('SensorDevice.store.Contacts', {
         },
         
         sorters: [
-            {property: 'name', direction: 'ASC'}
+            {property: 'surname', direction: 'ASC'}
         ],
         
         grouper: {
-            sortProperty: 'name',
+            sortProperty: 'surname',
             direction: 'ASC',
             groupFn: function(record) {
-                if (record && record.data.name) {
-                    return record.data.name.substr(0,1).toUpperCase();
+                if (record && record.data.surname) {
+                    return record.data.surname.substr(0,1).toUpperCase();
                 } else {
                     return '';
                 }

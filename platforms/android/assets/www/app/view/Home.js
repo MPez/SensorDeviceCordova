@@ -112,7 +112,7 @@ Ext.define('SensorDevice.view.Home', {
                     },
                     {
                         xtype: 'list',
-                        itemTpl: '{First} {Last}',
+                        itemTpl: '{name} {surname} {email} {phoneNumber} {address}',
                         itemId: 'contactsList',
                         /**
                         * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
