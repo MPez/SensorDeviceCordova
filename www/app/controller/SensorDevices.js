@@ -82,10 +82,12 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         if (index == 0) {
             console.log('onFileDemoForm');
-            var personalInfoStore = Ext.getStore('PersonalInfos');
+            var personalInfoStore = Ext.getStore('PersonalInfos'),
+		newInfo = null;
             
-            if (personalInfoStore.getCount() == 0) {
-                var newInfo = Ext.create('SensorDevice.model.PersonalInfo', {
+            if (personalInfoStore.getCount() === 0) {
+                newInfo = Ext.create('SensorDevice.model.PersonalInfo', {
+		    id: 1,
                     name: 'Soluzioni',
                     surname: 'Software',
                     address: 'Via dei Ronchi 21',
@@ -96,7 +98,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 });
             }
             else {
-                var newInfo = personalInfoStore.getAt(0);
+                newInfo = personalInfoStore.getAt(0);
             }
             
             var fileDemo = this.getFileDemoView();
@@ -147,9 +149,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         }
         
         var personalInfoStore = Ext.getStore('PersonalInfos');
-        personalInfoStore.removeAll();
-        personalInfoStore.sync();
-        personalInfoStore.add(currentInfo);
+        personalInfoStore.insert(0, currentInfo);
         personalInfoStore.sync();
     },
     
@@ -442,7 +442,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 console.log('onLoad');
                 var personalInfoStore = Ext.getStore('PersonalInfos');
                 var object = Ext.JSON.decode(evt.target.result);
-                personalInfoStore.add(object);
+                personalInfoStore.insert(0, object);
                 personalInfoStore.sync();
                 me.onLoadFormCommand();
             }
@@ -669,7 +669,8 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         var me = this;
         
         navigator.geolocation.getCurrentPosition(me.onLocationSuccess, me.onLocationError, {
-            enableHighAccuracy: false
+            timeout: 15000,
+            enableHighAccuracy: true
         });
     },
     
@@ -765,13 +766,15 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         function success(result) {
             console.log('success');
-            var barcode = Ext.create('SensorDevice.model.Barcode', {
-                code: result.text,
-                format: result.format
-            });
-            var barcodeStore = Ext.getStore('Barcodes');
-            barcodeStore.add(barcode);
-            barcodeStore.sync();
+            if (!result.cancelled) {
+                var barcode = Ext.create('SensorDevice.model.Barcode', {
+                    code: result.text,
+                    format: result.format
+                });
+                var barcodeStore = Ext.getStore('Barcodes');
+                barcodeStore.add(barcode);
+                barcodeStore.sync();
+            }
         }
         
         function fail(error) {

@@ -669,7 +669,8 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         var me = this;
         
         navigator.geolocation.getCurrentPosition(me.onLocationSuccess, me.onLocationError, {
-            enableHighAccuracy: false
+            timeout: 7000,
+            enableHighAccuracy: true
         });
     },
     

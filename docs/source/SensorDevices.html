@@ -50,6 +50,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 backButtonCommand: 'onBackButtonCommand',
                 loadContactsCommand: 'onLoadContactsCommand',
                 trashContactsCommand: 'onTrashContactsCommand',
+                connectionCommand: 'onConnectionCommand',
                 locationCommand: 'onLocationCommand',
                 mapRenderCommand: 'onMapRenderCommand',
                 positionCommand: 'onPositionCommand',
@@ -98,10 +99,12 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         if (index == 0) {
             console.log('onFileDemoForm');
-            var personalInfoStore = Ext.getStore('PersonalInfos');
+            var personalInfoStore = Ext.getStore('PersonalInfos'),
+		newInfo = null;
             
-            if (personalInfoStore.getCount() == 0) {
-                var newInfo = Ext.create('SensorDevice.model.PersonalInfo', {
+            if (personalInfoStore.getCount() === 0) {
+                newInfo = Ext.create('SensorDevice.model.PersonalInfo', {
+		    id: 1,
                     name: 'Soluzioni',
                     surname: 'Software',
                     address: 'Via dei Ronchi 21',
@@ -112,7 +115,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 });
             }
             else {
-                var newInfo = personalInfoStore.getAt(0);
+                newInfo = personalInfoStore.getAt(0);
             }
             
             var fileDemo = this.getFileDemoView();
@@ -163,9 +166,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         }
         
         var personalInfoStore = Ext.getStore('PersonalInfos');
-        personalInfoStore.removeAll();
-        personalInfoStore.sync();
-        personalInfoStore.add(currentInfo);
+        personalInfoStore.insert(0, currentInfo);
         personalInfoStore.sync();
     },
     
@@ -458,7 +459,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
                 console.log('onLoad');
                 var personalInfoStore = Ext.getStore('PersonalInfos');
                 var object = Ext.JSON.decode(evt.target.result);
-                personalInfoStore.add(object);
+                personalInfoStore.insert(0, object);
                 personalInfoStore.sync();
                 me.onLoadFormCommand();
             }
@@ -556,16 +557,20 @@ Ext.define('SensorDevice.controller.SensorDevices', {
     
 <span id='SensorDevice-controller-SensorDevices-method-onLoadContactsCommand'>    /**
 </span>     * Metodo che cattura l'evento di caricamento dei contatti del dispositivo;
-     * agisce effettuando una chiamata al metodo find passando come paramentri un oggetto di configurazione
-     * contenente i nomi dei campi di interesse e le funzioni di successo e fallimento.
+     * agisce effettuando una chiamata al metodo find passando come paramentri due oggetti di configurazione,
+     * contenenti i nomi dei campi di interesse e le opzioni di filtraggio, e le funzioni di successo e fallimento.
      */
     onLoadContactsCommand: function() {
         console.log('onLoadContactsCommand');
         
         var me = this;
         
-        var contactFields = ['displayName', 'emails', 'phoneNumbers'];
-        navigator.contacts.find(contactFields, me.onContactSuccess, me.onContactError);
+        var contactFields = ['*'];
+        var contactFindOptions = {
+            filter: '',
+            multiple: true
+        };
+        navigator.contacts.find(contactFields, me.onContactSuccess, me.onContactError, contactFindOptions);
     },
     
 <span id='SensorDevice-controller-SensorDevices-method-onContactSuccess'>    /**
@@ -580,12 +585,38 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         var contactsStore = Ext.getStore('Contacts');
         
-        for (var i = 0; i &lt; contacts.lenght; i++) {
+        for (var i = 0; i &lt; contacts.length; i++) {
+            var deviceContact = contacts[i];
+            
             var contact = Ext.create('SensorDevice.model.Contact', {
-                name: contacts[i].displayName,
-                email: contacts[i].emails[0],
-                phoneNumber: contacts[i].phoneNumbers[0]
+                name: '',
+                surname: '',
+                email: '',
+                phoneNumber: '',
+                address: ''
             });
+            
+            if (deviceContact.name) {
+                if (deviceContact.name.givenName) {
+                    contact.set('name', deviceContact.name.givenName);
+                }
+                if (deviceContact.name.familyName) {
+                    contact.set('surname', deviceContact.name.familyName);
+                }
+            }
+
+            if (deviceContact.emails) {
+                contact.set('email', deviceContact.emails[0].value);
+            }
+
+            if (deviceContact.phoneNumbers) {
+                contact.set('phoneNumber', deviceContact.phoneNumbers[0].value);
+            }
+
+            if (deviceContact.addresses) {
+                contact.set('address', deviceContact.addresses[0].value);
+            }
+                
             contactsStore.add(contact);
         }
         
@@ -615,6 +646,31 @@ Ext.define('SensorDevice.controller.SensorDevices', {
     },
     
     //------------------------------------------------------//
+    //           Apache Cordova Connection plugin           //
+    //------------------------------------------------------//
+    
+<span id='SensorDevice-controller-SensorDevices-method-onConnectionCommand'>    /**
+</span>     * Metodo che cattura l'evento di recupero informazioni sulla connessione del dispositivo.
+     */
+    onConnectionCommand: function() {
+        console.log('onConnectionCommand');
+        
+        var type = navigator.connection.type;
+        
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.CELL]     = 'Cell generic connection';
+        states[Connection.NONE]     = 'No network connection';
+        
+        Ext.Msg.alert('Connection information', 'Connection type: ' + states[type]);
+    },
+    
+    //------------------------------------------------------//
     //          Apache Cordova Geolocation plugin           //
     //                   Google Maps API                    //
     //------------------------------------------------------//
@@ -630,7 +686,8 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         var me = this;
         
         navigator.geolocation.getCurrentPosition(me.onLocationSuccess, me.onLocationError, {
-            enableHighAccuracy: false
+            timeout: 15000,
+            enableHighAccuracy: true
         });
     },
     
@@ -659,21 +716,20 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         positionStore.add(newPosition);
         positionStore.sync();
         
-        var mapCmp = this.getHomeView().getAt(5).getComponent('map');
+        var mapCmp = this.getHomeView().getAt(6).getComponent('map');
         var map = mapCmp.getMap();
-        var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-        map.setCenter(latLng);
+        var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         
-        /*
-        mapCmp.setMapCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+        
+        mapCmp.setMapCenter(latLng);
         mapCmp.setMapOptions({
             zoom: 15
         });
-        */
+        
         
         var marker = new google.maps.Marker({
             map: mapCmp.getMap(),
-            position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+            position: latLng,
             icon: 'img/maps-32.png',
             animation: google.maps.Animation.DROP
         });
@@ -699,7 +755,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onPositionCommand: function(home) {
         console.log('onPositionCommand');
-        home.setActiveItem(7);
+        home.setActiveItem(8);
     },
     
 <span id='SensorDevice-controller-SensorDevices-method-onBackGeolocationCommand'>    /**
@@ -707,7 +763,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onBackGeolocationCommand: function(home) {
         console.log('onBackGeolocationCommand');
-        home.setActiveItem(5);
+        home.setActiveItem(6);
     },
     
     //------------------------------------------------------//
@@ -727,13 +783,15 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         
         function success(result) {
             console.log('success');
-            var barcode = Ext.create('SensorDevice.model.Barcode', {
-                code: result.text,
-                format: result.format
-            });
-            var barcodeStore = Ext.getStore('Barcodes');
-            barcodeStore.add(barcode);
-            barcodeStore.sync();
+            if (!result.cancelled) {
+                var barcode = Ext.create('SensorDevice.model.Barcode', {
+                    code: result.text,
+                    format: result.format
+                });
+                var barcodeStore = Ext.getStore('Barcodes');
+                barcodeStore.add(barcode);
+                barcodeStore.sync();
+            }
         }
         
         function fail(error) {
@@ -762,6 +820,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
         Ext.getStore('PersonalInfos').load();
         Ext.getStore('Positions').load();
         Ext.getStore('Barcodes').load();
+        Ext.getStore('Contacts').load();
     }
 });
 </pre>
