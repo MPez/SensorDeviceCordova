@@ -6,6 +6,7 @@ Ext.define('SensorDevice.model.PersonalInfo', {
     
     config: {
         fields: [
+            { name: 'id', type: 'int' },
             { name: 'name', type: 'string' },
             { name: 'surname', type: 'string' },
             { name: 'address', type: 'string' },
