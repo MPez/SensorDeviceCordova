@@ -103,6 +103,10 @@ Ext.define('SensorDevice.controller.SensorDevices', {
             
             var fileDemo = this.getFileDemoView();
             fileDemo.setRecord(newInfo);
+        } else if (index == 7) {
+            var deviceRecord = this.onRetrieveDeviceInfoCommand();
+            var deviceView = home.getAt(7);
+            deviceView.setRecord(deviceRecord);
         }
         
         home.setActiveItem(index+1);
@@ -113,7 +117,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onBackButtonCommand: function(home) {
         console.log('onBackButtonCommand');
-        home.setActiveItem(0);
+        home.setActiveItem('#homeView');
     },
     
     /**
@@ -738,7 +742,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onPositionCommand: function(home) {
         console.log('onPositionCommand');
-        home.setActiveItem(8);
+        home.setActiveItem('#positionView');
     },
     
     /**
@@ -746,7 +750,7 @@ Ext.define('SensorDevice.controller.SensorDevices', {
      */
     onBackGeolocationCommand: function(home) {
         console.log('onBackGeolocationCommand');
-        home.setActiveItem(6);
+        home.setActiveItem('#geolocationView');
     },
     
     //------------------------------------------------------//
@@ -781,6 +785,28 @@ Ext.define('SensorDevice.controller.SensorDevices', {
             console.log('fail');
             Ext.Msg.alert('Error', error);
         }
+    },
+    
+    //------------------------------------------------------//
+    //            Apache Cordova Device plugin              //
+    //------------------------------------------------------//
+    
+    /**
+     * Metodo che recupera le informazioni proprie del device; agisce leggendo le proprietà dell'oggetto
+     * device creato da Cordova.
+     *
+     * @return {Ext.data.Model} istanza del modello delle info del dispositivo
+     */
+    onRetrieveDeviceInfoCommand: function() {
+        console.log('onRetrieveDeviceInfoCommand');
+        
+        var deviceRecord = Ext.create('SensorDevice.model.DeviceInfo', {
+            name: device.name,
+            platform: device.platform,
+            uuid: device.uuid
+        });
+        
+        return deviceRecord;
     },
     
     /**

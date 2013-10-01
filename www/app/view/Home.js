@@ -37,6 +37,7 @@ Ext.define('SensorDevice.view.Home', {
             * che descrive e permette di selezionare le diverse funzionalità implementate.
             */
             {
+                itemId: 'homeView',
                 items: [
                     {
                         xtype: 'titlebar',
@@ -64,6 +65,7 @@ Ext.define('SensorDevice.view.Home', {
             * di testare il salvataggio e il recupero delle informazioni nel filesystem del dispositivo.
             */
             {
+                itemId: 'fileView',
                 items: 
                 { xtype: 'filedemo' }
             },
@@ -73,6 +75,7 @@ Ext.define('SensorDevice.view.Home', {
             * Pagina dimostrativa delle funzionalità di cattura immagine da fotocamera o da galleria.
             */
             {
+                itemId: 'cameraView',
                 items: 
                 { xtype: 'camerademo' }
             },
@@ -83,6 +86,7 @@ Ext.define('SensorDevice.view.Home', {
             * e di visualizzarli in una lista ordinata.
             */
             {
+                itemId: 'contactsView',
                 items: [
                     {
                         xtype: 'titlebar',
@@ -133,6 +137,7 @@ Ext.define('SensorDevice.view.Home', {
              * Pagina che visualizza le informazioni riguardanti la connessione in atto del dispositivo.
              */
             {
+                itemId: 'connectionView',
                 items: [
                     {
                         xtype: 'titlebar',
@@ -163,6 +168,7 @@ Ext.define('SensorDevice.view.Home', {
             * Pagina relativa alle funzionalità di cattura video, audio e immagini dai sensori del dispositivo.
             */
             {
+                itemId: 'mediaView',
                 items:
                 { xtype: 'mediademo' }
             },
@@ -173,6 +179,7 @@ Ext.define('SensorDevice.view.Home', {
             * la posizione attuale del dispositivo e di salvarla in uno store.
             */
             {
+                itemId: 'geolocationView',
                 items: [
                     {
                         xtype: 'titlebar',
@@ -225,6 +232,7 @@ Ext.define('SensorDevice.view.Home', {
             * tramite una lista.
             */
             {
+                itemId: 'barcodeView',
                 items: [
                     {
                         xtype: 'titlebar',
@@ -264,10 +272,73 @@ Ext.define('SensorDevice.view.Home', {
             },
             /*
             * item 8
+            * sensorList index 7
+            * Pagina relativa alle informazioni riguardanti il dispositivo sul quale viene avviata l'app.
+            */
+            {
+                itemId: 'deviceView',
+                items: [
+                    {
+                        xtype: 'titlebar',
+                        docked: 'top',
+                        title: 'Device',
+                        defaults: {
+                            xtype: 'button',
+                            iconMask: true
+                        },
+                        
+                        items: [
+                            {
+                                itemId: 'backButton',
+                                ui: 'back',
+                                iconCls: 'arrow_left'
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'formpanel',
+                        /**
+                        * @cfg {String} height Proprietà CSS che identifica l'altezza del Container;
+                        * da impostare a 100% per consentire la visualizzazione della lista.
+                        */
+                        height: '100%',
+                        items: [
+                            {
+                                xtype: 'fieldset',
+                                itemId: 'deviceFieldSet',
+                                title: 'Device info',
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        label: 'Name',
+                                        name: 'name',
+                                        readOnly: true
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        label: 'Platform',
+                                        name: 'platform',
+                                        readOnly: true
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        label: 'UUID',
+                                        name: 'uuid',
+                                        readOnly: true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            /*
+            * item 9
             * Pagina relativa alle posizioni salvate tramite la geolocalizzazione del dispositivo,
             * tali informazioni vengono visualizzate su una lista.
             */
             {
+                itemId: 'positionView',
                 items: [
                     {
                         xtype: 'titlebar',

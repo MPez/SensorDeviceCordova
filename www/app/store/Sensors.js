@@ -1,6 +1,6 @@
 /**
  * Sensors rappresenta lo store inline utilizzato per visualizzare la lista
- * delle funzionalità disponibili tramite l'app
+ * delle funzionalità disponibili tramite l'app.
  */
 Ext.define('SensorDevice.store.Sensors', {
     extend: 'Ext.data.Store',
@@ -14,7 +14,8 @@ Ext.define('SensorDevice.store.Sensors', {
             { name: 'Connection', description: 'Permette di visualizzare le informazioni riguardanti la connessione in atto'},
             { name: 'Media', description: 'Permette di catturare o riprodurre file audio tramite il dispositivo' },
             { name: 'Geolocation', description: 'Permette di visualizzare la posizione corrente del dispositivo'},
-            { name: 'Barcode', description: 'Permette di leggere un barcode tramite la fotocamera del dispositivo'}
+            { name: 'Barcode', description: 'Permette di leggere un barcode tramite la fotocamera del dispositivo'},
+            { name: 'Device', description: 'Permette di visualizzare le informazioni proprie del device'}
         ]
     }
 });
